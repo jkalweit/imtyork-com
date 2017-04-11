@@ -1,0 +1,413 @@
+﻿<!DOCTYPE html>
+<html>
+
+		<head lang="en">
+				<meta charset="UTF-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1">
+
+				<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+				<script type="text/javascript" src="/lib/smooth-scroll.min.js"></script>
+
+				<title>IMT Duncan</title>
+				<style>
+* {
+		box-sizing: border-box;
+}
+
+		html, body {
+				margin: 0;
+				padding: 0;
+				min-width: 100%;
+				min-height: 100%;
+				font: 16px sans-serif;
+		}
+		body {
+				background-color: #CCC;
+				background-image: url("/imgs/lines_bg.jpg");
+		}
+
+		.content {
+				display: flex;
+				width: 900px;
+				background-color: #FFF;
+		}
+
+		.col {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+		}
+
+		.row {
+				display: flex;
+				flex-direction: row;
+		}
+
+		.row-fill {
+				flex: 1 1 auto;
+				width: 450px;
+		}
+
+		.padded {
+				padding: 36px;
+		}
+
+		.jumbo {
+				position: relative;
+				font-size: 60px;
+				width: 900px;
+				min-height: 200px;
+				background-color: #FFF;
+				background-image: url("/imgs/metal_bg.jpg");
+				color: #FFF;
+				text-shadow: 2px 2px #000000;
+				box-sizing: border-box;
+		}
+
+		ul {
+				list-style-type: none;
+				padding: 0 1em 0 0;
+				margin: 0;
+		}
+
+		li {
+				line-height: 1.5em;
+				border-bottom: 1px solid #CCC;
+				padding: .25em 0;
+		}
+
+		.header {
+				background-color: #000;
+				color: #fff;
+				border-bottom: 2px solid #888;
+		}
+
+		.header a {
+				color: #fff;
+				font-weight: bold;
+		}
+
+		nav {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				transition: all 0.5s ease;
+		 		position: fixed; 
+				top: 0;
+				z-index: 10;
+				height: auto;
+		}
+
+		a {
+				text-decoration: none;
+		}
+
+		nav a {
+				padding-right: 1em;
+				display: inline-block;
+				text-align: center;
+				transition: all 0.5s ease;
+				border-right: 1px solid #888;
+		}
+		nav a:last-child, nav a:nth-last-child(2) {
+				border-right: none;
+		}
+		nav a:not(:first-child) {
+				padding-left: 1em;
+		}
+
+		nav a:hover {
+				color: #F00;
+		}
+		/* use fixed anchor to position anchors to account for fixed header -JDK 2017-04-07  */
+
+		a.fixed-anchor {
+				position: relative;
+		}
+
+		.fixed-anchor span {
+				position: absolute;
+				top: -100px;
+		}
+
+		#nav-icon {
+				display: none;
+				position: absolute;
+				top: 0;
+				right: 0;
+				width: 90px;
+				height: 90px;
+				line-height: 90px;
+				text-align: center;
+				padding: 0;
+				border: none;
+				background-color: transparent;
+		}
+
+		@media(max-width: 900px) {
+				#nav-icon {
+						display: block;
+				}
+				.content,
+				.jumbo {
+						width: 100%;
+				}
+				.row {
+						flex-wrap: wrap;
+				}
+				nav {
+						height: auto;
+				}
+				nav a {
+						border-right: none;
+				}
+				nav a:not(:first-child) {
+						display: none;
+				}
+				nav.responsive {
+						flex-direction: column;
+						flex-wrap: nowrap;
+				}
+				nav.responsive a {
+						display: block;
+						background-color: black;
+						border-bottom: 1px solid #888;
+						width: 100%;
+						padding: 8px;
+						text-align: left;
+				}
+				nav.responsive a:nth-last-child(2) {
+						border: none;
+				}
+		}
+
+		@font-face {
+				font-family: 'Material Icons';
+				font-style: normal;
+				font-weight: 400;
+				src: url(https://example.com/MaterialIcons-Regular.eot);
+				/* For IE6-8 */
+				src: local('Material Icons'), local('MaterialIcons-Regular'), url(/imgs/fonts/MaterialIcons-Regular.woff2) format('woff2'), url(/imgs/fonts/MaterialIcons-Regular.woff) format('woff'), url(/imgs/fonts/MaterialIcons-Regular.ttf) format('truetype');
+		}
+
+		.material-icons {
+				font-family: 'Material Icons';
+				font-weight: normal;
+				font-style: normal;
+				font-size: 24px;
+				letter-spacing: normal;
+				text-transform: none;
+				white-space: nowrap;
+				word-wrap: normal;
+				direction: ltr;
+				-webkit-font-feature-settings: 'liga';
+				-webkit-font-smoothing: antialiased;
+				font-feature-settings: 'liga';
+		}
+				</style>
+		</head>
+
+		<body class="col">
+				<nav id="main-nav" class="content padded header">
+						<a data-scroll class="nav-item" href="#main" style="text-align: left" onclick="disableNav()">IMT Duncan</a>
+						<a data-scroll class="nav-item" href="#services" onclick="disableNav()">Services</a>
+						<a data-scroll class="nav-item" href="#afcline" onclick="disableNav()">AFC Line</a>
+						<a data-scroll class="nav-item" href="#pit" onclick="disableNav()">Pit Furnace</a>
+						<a data-scroll class="nav-item" href="#delivery" onclick="disableNav()">Delivery</a>
+						<a data-scroll class="nav-item" href="#location" onclick="disableNav()">Location</a>
+						<a data-scroll class="nav-item" href="#contact" onclick="disableNav()">Contact</a>
+						<a class="material-icons" id="nav-icon" onclick="toggleNav()">menu</a>
+				</nav>
+				<div class="jumbo padded" style="margin-top: 90px;">
+						<a class="fixed-anchor"><span id="main"></span></a>
+						<img class="right" src="/imgs/flames.png" style="width: 50%; position: absolute; top: 0; right: 0; height: 100%" />
+						<div class="margin1">Certified</div>
+						<div class="margin1">Commercial</div>
+						<div class="margin1">Heat Treating</div>
+				</div>
+				<div class="content padded" style="padding-top: 2em; padding-bottom: 2em;">
+						<h1>Quality is Expected, Delivery is Guaranteed.</h1>
+				</div>
+				<div class="content row" style="padding-bottom: 2em;">
+						<div class="row-fill padded" style="text-align: center">
+								<img style="max-width: 150px" src="/imgs/logo.gif" />
+						</div>
+						<div class="row-fill padded">
+								<p>IMT Duncan is a privately owned commercial heat treater and brazer located in the Greenville-Spartanburg area of upstate South Carolina. Serving customers across the US, we heat treat and braze parts for the automotive, heavy equipment and consumer markets. Our experience, state-of-the-art technology, and commitment to high quality metallurgical heat treating and delivery set us apart in the industry.</p>
+						</div>
+				</div>
+				<div class="content row" style="padding-bottom: 2em;">
+						<div class="row-fill padded">
+								<ul>
+										<li>ISO 9001 Certified and CQI-9 Compliant</li>
+										<li>Member of MTI Metal Treaters Institute</li>
+								</ul>
+								<img style="width: 100%" src="/imgs/certs.png" />
+						</div>
+						<div class="row-fill padded">
+								<img style="width: 100%" src="/imgs/building_duncan.jpg" />
+						</div>
+				</div>
+				<div class="jumbo padded">
+						<a class="fixed-anchor"><span id="services"></span></a>
+						<img class="right" src="/imgs/flames.png" style="width: 50%; position: absolute; top: 0; right: 0; height: 100%" />
+						<div class="margin1">Full</div>
+						<div class="margin1">Service</div>
+						<div class="margin1">Heat Treating</div>
+				</div>
+				<div class="content padded">
+						<h1>Services</h1>
+				</div>
+				<div class="content row">
+						<div class="row-fill padded">
+								<ul>
+										<li>Endothermic Atmosphere Heat Treating</li>
+										<li>Exothermic Atmosphere Brazing and Annealing</li>
+										<li>Aluminum Heat Treating</li>
+										<li>Straightening</li>
+										<li>Cleaning</li>
+										<li>Carburizing</li>
+										<li>Carbonitriding</li>
+										<li>Copper Brazing</li>
+										<li>Neutral and Case Hardening</li>
+										<li>Normalizing</li>
+										<li>Stress Relieving</li>
+										<li>Metallurgical Laboratory and Inspection</li>
+								</ul>
+						</div>
+						<div class="row-fill padded">
+								<img style="width: 100%" src="/imgs/placeholder.png" />
+						</div>
+				</div>
+				<div class="jumbo padded">
+						<a class="fixed-anchor"><span id="afcline"></span></a>
+						<img class="right" src="/imgs/flames.png" style="width: 50%; position: absolute; top: 0; right: 0; height: 100%" />
+						<div class="margin1">AFC</div>
+						<div class="margin1">Continuous</div>
+						<div class="margin1">Belt</div>
+				</div>
+				<div class="content padded">
+						<h1>AFC Continuous Belt</h1>
+				</div>
+				<div class="content row">
+						<div class="row-fill padded">
+								<ul>
+										<li>[pounds]lb Capacity</li>
+										<li>Up to 1,650F</li>
+										<li>Computerized Control & Recording</li>
+								</ul>
+						</div>
+						<div class="row-fill padded">
+								<img style=" width: 100%" src="/imgs/placeholder.png" />
+						</div>
+				</div>
+				<div class="jumbo padded">
+						<a class="fixed-anchor"><span id="pit"></span></a>
+						<img class="right" src="/imgs/flames.png" style="width: 50%; position: absolute; top: 0; right: 0; height: 100%" />
+						<div class="margin1">Custom</div>
+						<div class="margin1">Pit</div>
+						<div class="margin1">Furnace</div>
+				</div>
+				<div class="content padded">
+						<h1>Maximum Load Size: [size]</h1>
+				</div>
+				<div class="content row">
+						<div class="row-fill padded">
+								<ul>
+										<li>[pounds]lb Capacity</li>
+										<li>Up to 1,650F</li>
+										<li>+/- 25F Uniformity & Control</li>
+										<li>Computerized Control & Recording</li>
+								</ul>
+						</div>
+						<div class="row-fill padded">
+								<img style=" width: 100%" src="/imgs/placeholder.png" />
+						</div>
+				</div>
+				<div class="jumbo padded">
+						<a class="fixed-anchor"><span id="delivery"></span></a>
+						<img class="right" src="/imgs/flames.png" style="width: 50%; position: absolute; top: 0; right: 0; height: 100%" />
+						<div class="margin1">Quality</div>
+						<div class="margin1">On Your</div>
+						<div class="margin1">Schedule</div>
+				</div>
+				<div class="content padded">
+						<h1>Quality Heat Treating on Your Schedule</h1>
+				</div>
+				<div class="content row" style="padding-bottom: 2em;">
+						<div class="row-fill padded">
+								<p>IMT Duncan excels in the heat treating market by delivering high metallurgical integrity and capability and superb on-time service. Our technical expertise, state-of-the art heat treating equipment, and discipline provide consistent, high performing heat treated products that are ready when your industry needs them.</p>
+						</div>
+						<div class="row-fill padded" style="text-align: center">
+								<img style="width: 100%" src="/imgs/placeholder.png" />
+						</div>
+				</div>
+				<div class="jumbo padded" style="position: relative">
+						<a class="fixed-anchor"><span id="location"></span></a>
+						<img class="right" src="/imgs/flames.png" style="width: 50%; position: absolute; top: 0; right: 0; height: 100%" />
+						<div class="margin1">Conveniently</div>
+						<div class="margin1">Located</div>
+						<div class="margin1">On I-85</div>
+				</div>
+				<div class="content row">
+						<div class="row-nofill padded">
+								<h3>Street Address</h3>
+								<ul>
+										<li>IMT Duncan LLC</li>
+										<li>235 Commerce Court</li>
+										<li>Duncan, SC 29334</li>
+								</ul>
+								<h3>Mailing Address</h3>
+								<ul>
+										<li>IMT Duncan LLC</li>
+										<li>PO Box 248</li>
+										<li>Duncan, SC 29334</li>
+								</ul>
+						</div>
+						<div class="row-fill padded">
+								<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d836247.7847277954!2d-82.19260883719255!3d35.04191279764051!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88578308c1723f99%3A0x8753ad5177025e1a!2sIMT+Duncan+LLC!5e0!3m2!1sen!2sus!4v1491925396547" frameborder="0" style="border:0; width: 100%; height: 400px;" allowfullscreen></iframe>
+						</div>
+				</div>
+				<div class="jumbo padded">
+						<a class="fixed-anchor"><span id="contact"></span></a>
+						<img class="right" src="/imgs/flames.png" style="width: 50%; position: absolute; top: 0; right: 0; height: 100%" />
+						<div class="margin1">Call Us</div>
+						<div class="margin1">For More</div>
+						<div class="margin1">Details</div>
+				</div>
+				<div class="content padded">
+						<h1>Contact</h1>
+				</div>
+				<div class="content row">
+						<div class="row-fill padded">
+								<ul>
+										<li><a href="tel:8644338231">864-433-8231</a></li>
+										<li><a href="mailto:info@imtduncan.com">info@imtduncan.com</a></li>
+								</ul>
+						</div>
+						<div class="row-fill padded">
+								<img style="width: 100%" src="/imgs/dial.jpg" />
+						</div>
+				</div>
+
+
+				<div class="content row header" style="border-top: 1px solid black">
+						<div class="row-fill padded">
+								IMT Duncan LLC - 235 Commerce Court, Duncan SC
+						</div>
+						<div class="padded" style="float: right; text-align: right"><a href="tel:8644338231">864-433-8231</a></div>
+				</div>
+
+				<script>
+io().on('reload', function () { location.reload(); }); smoothScroll.init();
+
+function toggleNav() {
+		document.getElementById('main-nav').classList.toggle('responsive');
+}
+function disableNav() {
+		document.getElementById('main-nav').classList.remove('responsive');
+}
+				</script>
+		</body>
+
+</html>
